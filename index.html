@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>SpaceHeyMods</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <div class="container">
+
+    <header class="header">
+      <div class="logo">SpaceHeyMods</div>
+
+      <nav class="nav">
+        <a href="#features">Features</a>
+        <a href="#install">Install</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <a href="https://github.com/tomokuroki" class="btn btn-secondary" target="_blank">GitHub</a>
+        <a href="https://spacehey.com/tomokokun" class="btn btn-primary" target="_blank">My SpaceHey</a>
+        <a href="https://github.com/tomokuroki/SpaceHeyMods/releases/download/v1.0.0-alpha/SpaceHeyMods.rar"
+          class="btn btn-primary" id="downloadBtn">Download</a>
+      </div>
+    </header>
+
+    <section class="hero">
+      <h1>SpaceHeyMods</h1>
+      <p class="subtitle">This is an open-source extension with publicly available code that improves SpaceHey and fixes
+        bugs.</p>
+      <a href="https://github.com/tomokuroki/SpaceHeyMods/releases/download/v1.0.0-alpha/SpaceHeyMods.rar"
+        class="btn btn-primary" id="heroDownload">Download Extension</a>
+    </section>
+
+    <div class="grid">
+      <div class="card" id="features">
+        <h2>Features</h2>
+        <ul class="features">
+          <li><b>Send messages with Enter</b> in SpaceHey IM</li>
+        </ul>
+      </div>
+
+      <div class="card" id="install">
+        <h2>Installation</h2>
+        <ol class="steps">
+          <li>Download and extract the ZIP.</li>
+          <li>Open <code>chrome://extensions</code></li>
+          <li>Enable <b>Developer Mode</b></li>
+          <li>Click <b>Load unpacked</b></li>
+          <li>Select the extension folder</li>
+        </ol>
+      </div>
+
+      <div class="card" id="faq">
+        <h2>FAQ</h2>
+
+        <div class="accordion-item">
+          <div class="accordion-question">What is SpaceHeyMods?<span>+</span></div>
+          <div class="accordion-answer">A browser extension that adds small improvements to SpaceHey.</div>
+        </div>
+
+        <div class="accordion-item">
+          <div class="accordion-question">Is it safe?<span>+</span></div>
+          <div class="accordion-answer">Yes. It only modifies the interface and adds simple features.</div>
+        </div>
+
+        <div class="accordion-item">
+          <div class="accordion-question">Is it free?<span>+</span></div>
+          <div class="accordion-answer">Yes, completely free.</div>
+        </div>
+
+      </div>
+    </div>
+
+    <footer class="footer">
+      SpaceHeyMods — not affiliated with SpaceHey
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+
+</body>
+
+</html>
