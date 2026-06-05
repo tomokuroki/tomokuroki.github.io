@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tomokuroki | Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --gold: #C9A96E;
+            --dark-gold: #7B4F2E;
+            --bg-dark: #0A0705;
+            --text-main: #E8D5B7;
+            --text-muted: #A08A70;
+            --glass-bg: rgba(20, 15, 12, 0.45);
+            --glass-border: rgba(201, 169, 110, 0.15);
+            --font-mono: 'Fira Code', 'Courier New', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: var(--font-mono);
+            min-height: 150vh;
+            padding: 20px 10px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        @media (min-width: 768px) {
+            body {
+                padding: 40px 20px;
+            }
+        }
+
+        #liquid-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        .scroll-intro-container {
+            width: 100%;
+            height: 40vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1000px;
+            position: relative;
+            z-index: 10;
+            overflow: hidden;
+        }
+
+        .scroll-welcome-text {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--gold);
+            text-align: center;
+            letter-spacing: 4px;
+            text-shadow: 0 0 20px rgba(201, 169, 110, 0.3);
+            transform-style: preserve-3d;
+            will-change: transform, opacity, filter;
+            transition: transform 0.1s linear, opacity 0.1s linear, filter 0.1s linear;
+        }
+
+        @media (min-width: 768px) {
+            .scroll-welcome-text {
+                font-size: 3.5rem;
+                letter-spacing: 6px;
+            }
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            position: relative;
+            z-index: 5;
+        }
+
+        .glass-panel {
+            backdrop-filter: blur(16px) saturate(140%);
+            -webkit-backdrop-filter: blur(16px) saturate(140%);
+            border-radius: 12px;
+            padding: 16px;
+        }
+
+        @media (min-width: 768px) {
+            .glass-panel {
+                padding: 24px;
+            }
+        }
+
+        .terminal-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid rgba(201, 169, 110, 0.1);
+            padding-bottom: 12px;
+            margin-bottom: 20px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .dot.red { background: #ff5f56; }
+        .dot.yellow { background: #ffbd2e; }
+        .dot.green { background: #27c93f; }
+
+        .terminal-title {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-left: 5px;
+        }
+
+        h3 {
+            color: var(--gold);
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        pre {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: var(--text-main);
+            overflow-x: auto;
+            white-space: pre;
+        }
+
+        .code-block-wrapper {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(201, 169, 110, 0.08);
+            border-radius: 6px;
+            padding: 12px;
+            margin-top: 15px;
+            overflow-x: auto;
+        }
+
+        .header-table-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        @media (min-width: 768px) {
+            .header-table-container {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+        .header-table-container img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .neofetch-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        @media (min-width: 768px) {
+            .neofetch-container {
+                flex-direction: row;
+            }
+        }
+        .neofetch-container .gif-side {
+            width: 100%;
+        }
+        @media (min-width: 768px) {
+            .neofetch-container .gif-side {
+                width: 45%;
+            }
+        }
+        .neofetch-container .info-side {
+            width: 100%;
+            overflow-x: auto;
+        }
+        @media (min-width: 768px) {
+            .neofetch-container .info-side {
+                width: 55%;
+            }
+        }
+
+        .social-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-main);
+            text-decoration: none;
+            margin-right: 20px;
+            vertical-align: middle;
+        }
+        .social-link:hover {
+            color: var(--gold);
+            text-decoration: none;
+        }
+        .social-link svg {
+            width: 14px;
+            height: 14px;
+            fill: currentColor;
+            display: inline-block;
+            vertical-align: middle;
+            transition: none !important;
+            animation: none !important;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            margin-top: 15px;
+        }
+        @media (min-width: 768px) {
+            .projects-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .project-card {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(201, 169, 110, 0.1);
+            border-radius: 8px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: border-color 0.2s ease;
+        }
+        .project-card:hover {
+            border-color: rgba(201, 169, 110, 0.3);
+        }
+        .project-title-area {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .project-title-area h4 {
+            font-size: 1rem;
+            color: var(--gold);
+            word-break: break-all;
+        }
+        .project-badge {
+            font-size: 0.75rem;
+            border: 1px solid var(--dark-gold);
+            padding: 1px 6px;
+            border-radius: 10px;
+            color: var(--gold);
+            background: rgba(123, 79, 46, 0.1);
+        }
+        .project-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+            margin-bottom: 15px;
+            flex-grow: 1;
+        }
+        .project-meta {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 0.8rem;
+        }
+        .lang-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 4px;
+        }
+        .star-meta {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: var(--text-main);
+        }
+
+        .flex-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        @media (min-width: 768px) {
+            .flex-grid { flex-direction: row; }
+            .flex-grid > .col-50 { width: 50%; }
+        }
+
+        .stack-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+        .stack-table th, .stack-table td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid rgba(201, 169, 110, 0.05);
+        }
+        .stack-table th {
+            color: var(--gold);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .hr-line {
+            height: 1px;
+            background: rgba(201, 169, 110, 0.1);
+            margin: 30px 0;
+            border: none;
+        }
+
+        a {
+            color: var(--gold);
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="liquid-canvas"></canvas>
+
+    <div class="scroll-intro-container">
+        <div class="scroll-welcome-text" id="welcome-text">WELCOME TO MY SPACE</div>
+    </div>
+
+    <div class="container">
+        
+        <div class="glass-panel">
+            <div class="terminal-header">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+                <span class="terminal-title">tomokuroki@fedora:~</span>
+            </div>
+
+            <h3>&gt; whoami</h3>
+            
+            <div class="header-table-container">
+                <div class="typing-side">
+                    <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=18&duration=3000&pause=1000&color=C9A96E&vCenter=true&width=450&lines=tomokuroki;Software+Engineer;C%2B%2B+%7C+Flutter+%7C+FastAPI;Code+ it.+Ship+it.+Break+it.+Fix+it." alt="Typing SVG" />
+                </div>
+                <div class="views-side">
+                    <a href="https://github.com/tomokuroki" target="_blank">
+                        <img src="https://komarev.com/ghpvc/?username=tomokuroki&color=7B4F2E&style=for-the-badge&label=PROFILE+VIEWS&abbreviated=true" alt="Profile Views" />
+                    </a>
+                </div>
+            </div>
+
+            <div class="code-block-wrapper">
+<pre><code>/*
+╔╦╗ ╔═╗ ╔╗╔╗ ╔═╗ ╦ ╦ ╦ ╦ ╦═╗ ╔═╗ ╦ ╦ ╦
+ ║  ║ ║ ║╚╝║ ║ ║ ╠╩╗ ║ ║ ╠╦╝ ║ ║ ╠╩╗ ║
+ ╩  ╚═╝ ╩  ╩ ╚═╝ ╩ ╩ ╚═╝ ╩╚═ ╚═╝ ╩ ╩ ╩
+*/
+
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+
+class Tomokuroki {
+public:
+    std::string name    = "tomokuroki";
+    std::string role    = "Software Engineer";
+    std::vector&lt;std::string&gt; languages = {
+        "C++", "Python", "JavaScript",
+        "TypeScript", "Dart"
+    };
+    std::string motto   = "Code it. Ship it. Break it. Fix it.";
+
+    void say_hi() const {
+        std::cout &lt;&lt; "Hey! I build backends, mobile\n";
+        std::cout &lt;&lt; "apps, and low-level tools.\n";
+        std::cout &lt;&lt; "Always shipping something new 🚀\n";
+    }
+};
+
+int main() {
+    Tomokuroki me;
+    me.say_hi();
+    return 0;
+}</code></pre>
+            </div>
+
+            <div class="hr-line"></div>
+
+            <h3>&gt; neofetch</h3>
+            <div class="neofetch-container">
+                <div class="gif-side">
+                    <img src="https://raw.githubusercontent.com/danielex1999/danielex1999/main/img/noctis.gif" width="100%" alt="noctis" style="border-radius: 6px; border: 1px solid var(--dark-gold);" />
+                </div>
+                <div class="info-side">
+<pre>
+tomokuroki@fedora
+──────────────────────────────────────────
+OS      ▸ Fedora Linux 40  (Workstation)
+Kernel  ▸ 6.8.10-300.fc40.x86_64
+Shell   ▸ fish
+Editor  ▸ nvim  /  vscode
+──────────────────────────────────────────
+CPU     ▸ Intel Core i9-13900HX (24C) @ 5.4 GHz
+GPU     ▸ NVIDIA GeForce RTX 4070  8 GB GDDR6
+RAM     ▸ 32 GB DDR5 @ 4800 MHz
+Disk    ▸ 1 TB NVMe M.2 SSD
+──────────────────────────────────────────
+SOCIALS ▸ 
+ <a href="https://github.com/tomokuroki" target="_blank" class="social-link"><svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>github</a>
+ <a href="https://instagram.com/buttersweetavenue" target="_blank" class="social-link"><svg viewBox="0 0 16 16"><path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.917 3.917 0 0 0-1.417.923A3.917 3.917 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.916 3.916 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.926 3.926 0 0 0-.923-1.417A3.911 3.911 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0h.003zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599.28.28.453.546.598.92.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.47 2.47 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.478 2.478 0 0 1-.92-.598 2.48 2.48 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233 0-2.136.008-2.388.046-3.231.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92.28-.28.546-.453.92-.598.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045v.002zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92zm-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217zm0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334z"/></svg>instagram</a>
+</pre>
+                </div>
+            </div>
+
+            <div class="hr-line"></div>
+
+            <h3>&gt; cat /etc/techstack &amp; &gt; cat projects/README.md</h3>
+            <div class="flex-grid">
+                <div class="col-50">
+                    <img src="https://skillicons.dev/icons?i=cpp,python,fastapi,nodejs,ts,js,flutter,dart,mongodb,docker,linux,git&theme=dark&perline=6" alt="Tech Stack" style="margin-bottom: 15px; max-width:100%;" />
+                    <table class="stack-table">
+                        <thead>
+                            <tr>
+                                <th>Domain</th>
+                                <th>Tech</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><strong>System</strong></td><td>C++ · STL · low-level</td></tr>
+                            <tr><td><strong>Backend</strong></td><td>FastAPI · Node.js · REST</td></tr>
+                            <tr><td><strong>Databases</strong></td><td>MongoDB · SQLite</td></tr>
+                            <tr><td><strong>Mobile</strong></td><td>Flutter · Dart</td></tr>
+                            <tr><td><strong>DevOps</strong></td><td>Docker · CI/CD · Git</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-50">
+                    <table class="stack-table" style="border: none;">
+                        <tr>
+                            <td width="50"><img src="https://skillicons.dev/icons?i=fastapi&theme=dark" width="40"/></td>
+                            <td style="vertical-align: middle;"><strong>FastAPI</strong> backends &amp; microservices</td>
+                        </tr>
+                        <tr>
+                            <td width="50"><img src="https://skillicons.dev/icons?i=flutter&theme=dark" width="40"/></td>
+                            <td style="vertical-align: middle;"><strong>Flutter</strong> cross-platform apps</td>
+                        </tr>
+                        <tr>
+                            <td width="50"><img src="https://skillicons.dev/icons?i=cpp&theme=dark" width="40"/></td>
+                            <td style="vertical-align: middle;"><strong>C++</strong> system &amp; low-level tools</td>
+                        </tr>
+                        <tr>
+                            <td width="50"><img src="https://skillicons.dev/icons?i=docker&theme=dark" width="40"/></td>
+                            <td style="vertical-align: middle;"><strong>Docker</strong> deployments &amp; CI/CD</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="hr-line"></div>
+
+            <h3>&gt; ls -la pinned/</h3>
+            <div class="projects-grid">
+                
+                <div class="project-card">
+                    <div class="project-title-area">
+                        <h4><a href="https://github.com/tomokuroki/GitHub-Customizer-Fidget-Mod" target="_blank">GitHub-Customizer-Fidget-Mod</a></h4>
+                        <span class="project-badge">Public</span>
+                    </div>
+                    <p class="project-desc">An all-in-one productivity and customization mod for GitHub. It replaces standard styling with premium dark color modes, injects custom helper scripts, and features an interactive contribution-board.</p>
+                    <div class="project-meta">
+                        <span><span class="lang-indicator" style="background-color: #663399;"></span>CSS</span>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-title-area">
+                        <h4><a href="https://github.com/tomokuroki/mcs_pfp" target="_blank">mcs_pfp</a></h4>
+                        <span class="project-badge">Public</span>
+                    </div>
+                    <p class="project-desc">Simple C++ microservice for image compression.</p>
+                    <div class="project-meta">
+                        <span><span class="lang-indicator" style="background-color: #f34b7d;"></span>C++</span>
+                        <span class="star-meta">
+                            <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg> 1
+                        </span>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-title-area">
+                        <h4><a href="https://github.com/tomokuroki/femboylang" target="_blank">femboylang</a></h4>
+                        <span class="project-badge">Public</span>
+                    </div>
+                    <p class="project-desc">FemboyLang is a modern programming language focused on simplicity and developer experience.</p>
+                    <div class="project-meta">
+                        <span><span class="lang-indicator" style="background-color: #3572A5;"></span>Python</span>
+                        <span class="star-meta">
+                            <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg> 1
+                        </span>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-title-area">
+                        <h4><a href="https://github.com/tomokuroki/Tor-Apache-PHP-Mysql-Docker" target="_blank">Tor-Apache-PHP-Mysql-Docker</a></h4>
+                        <span class="project-badge">Public</span>
+                    </div>
+                    <p class="project-desc">This project sets up a hidden Tor service running a PHP Apache web server connected to a MySQL database. The entire stack runs in Docker containers.</p>
+                    <div class="project-meta">
+                        <span><span class="lang-indicator" style="background-color: #4F5D95;"></span>PHP</span>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-title-area">
+                        <h4><a href="https://github.com/tomokuroki/SpaceHeyMods" target="_blank">SpaceHeyMods</a></h4>
+                        <span class="project-badge">Public</span>
+                    </div>
+                    <p class="project-desc">This is an open-source extension with publicly available code that improves SpaceHey and fixes bugs.</p>
+                    <div class="project-meta">
+                        <span><span class="lang-indicator" style="background-color: #f1e05a;"></span>JavaScript</span>
+                        <span class="star-meta">
+                            <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg> 1
+                        </span>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-title-area">
+                        <h4><a href="https://github.com/tomokuroki/tomokuroki.github.io" target="_blank">tomokuroki.github.io</a></h4>
+                        <span class="project-badge">Public</span>
+                    </div>
+                    <p class="project-desc">Personal portfolio and landing page layout.</p>
+                    <div class="project-meta">
+                        <span><span class="lang-indicator" style="background-color: #e34c26;"></span>HTML</span>
+                        <span class="star-meta">
+                            <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg> 1
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="hr-line"></div>
+
+            <h3>&gt; uptime</h3>
+            <div style="width: 100%; overflow-x: auto;">
+                <img width="100%" src="https://github-readme-activity-graph.vercel.app/graph?username=tomokuroki&bg_color=0d0906&color=c9a96e&line=7b4f2e&point=e8d5b7&area=true&area_color=3d2010&hide_border=true&radius=6" alt="Activity Graph" style="border-radius: 6px; min-width: 600px;" />
+            </div>
+
+            <div class="hr-line"></div>
+
+<pre>
+$ echo "Thanks for visiting!"
+Thanks for visiting!
+$ _
+</pre>
+        </div>
+    </div>
+
+    <script>
+        const welcomeText = document.getElementById('welcome-text');
+        const isMobile = window.innerWidth < 768;
+        
+        window.addEventListener('scroll', () => {
+            let scrollValue = window.scrollY;
+            let opacity = 1 - (scrollValue / 300);
+            let blur = scrollValue * 0.04;
+            
+            if (opacity >= 0) {
+                if (!isMobile) {
+                    let scale = 1 + (scrollValue * 0.005);
+                    let translateZ = scrollValue * 0.8;
+                    welcomeText.style.transform = `translateZ(${translateZ}px) scale(${scale})`;
+                } else {
+                    welcomeText.style.transform = 'none';
+                }
+                welcomeText.style.opacity = opacity;
+                welcomeText.style.filter = `blur(${blur}px)`;
+            } else {
+                welcomeText.style.opacity = 0;
+            }
+        });
+
+        const canvas = document.getElementById('liquid-canvas');
+        const ctx = canvas.getContext('2d');
+
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        class LiquidBlob {
+            constructor() {
+                this.radius = Math.random() * 100 + 120;
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                if (this.x < -this.radius / 2 || this.x > width + this.radius / 2) this.vx *= -1;
+                if (this.y < -this.radius / 2 || this.y > height + this.radius / 2) this.vy *= -1;
+            }
+            draw() {
+                const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.radius);
+                gradient.addColorStop(0, 'rgba(123, 79, 46, 0.22)');  
+                gradient.addColorStop(0.6, 'rgba(201, 169, 110, 0.04)'); 
+                gradient.addColorStop(1, 'rgba(10, 7, 5, 0)');          
+                ctx.fillStyle = gradient;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        const blobs = [];
+        const blobCount = window.innerWidth < 768 ? 3 : 5;
+        for (let i = 0; i < blobCount; i++) blobs.push(new LiquidBlob());
+
+        function animate() {
+            ctx.fillStyle = '#0A0705';
+            ctx.fillRect(0, 0, width, height);
+            blobs.forEach(blob => {
+                blob.update();
+                blob.draw();
+            });
+            requestAnimationFrame(animate);
+        }
+        animate();
+    </script>
+</body>
+</html>
