@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HSK 词汇档案 | HSK Архив материалов</title>
+    <link rel="stylesheet" href="css/style.css">
+    <!-- PDF.js для рендеринга обложек -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    </script>
+</head>
+<body>
+    <div class="loader-overlay" id="loader">
+        <div class="spinner"></div>
+    </div>
+
+    <div class="chinese-pattern"></div>
+
+    <header class="header">
+        <div class="header-inner">
+            <div class="logo">
+                <span class="logo-icon">福</span>
+                <div class="logo-text">
+                    <h1>HSK 词汇档案</h1>
+                    <p>Архив учебных материалов по китайскому языку</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="filter-section">
+            <h2 class="section-title">
+                <span class="title-line"></span>
+                选择级别 / Выберите уровень
+                <span class="title-line"></span>
+            </h2>
+            <div class="filter-buttons" id="filterButtons">
+                <button class="filter-btn active" data-level="all">全部 / Все</button>
+                <button class="filter-btn" data-level="1">HSK 1</button>
+                <button class="filter-btn" data-level="2">HSK 2</button>
+                <button class="filter-btn" data-level="3">HSK 3</button>
+                <button class="filter-btn" data-level="4">HSK 4</button>
+                <button class="filter-btn" data-level="5">HSK 5</button>
+                <button class="filter-btn" data-level="6">HSK 6</button>
+            </div>
+        </div>
+
+        <div class="cards-grid" id="cardsGrid">
+        </div>
+
+        <div class="empty-state" id="emptyState" style="display: none;">
+            <div class="empty-icon">📁</div>
+            <h3>暂无文件 / Пока нет файлов</h3>
+            <p>Добавьте PDF в папку <code>pdf</code> и обновите страницу</p>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>🏮 学业进步 · Успехов в учёбе · 恭喜发财 🏮</p>
+            <p class="footer-small">HSK 词汇档案 · 2026</p>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
